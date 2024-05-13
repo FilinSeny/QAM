@@ -25,6 +25,7 @@ QAMmodulator::QAMmodulator(const std::vector<std::string>& digitalData, const in
 		default:
 			break;
 		}
+		std::cout << digitalData[i] << ' ' << I << ' ' << Q << std::endl;
 		for (int j = 0; j < n_rep; ++j, t += dt) {
 			///std::cout << t << std::endl;
 			IQ.push_back({ I, Q });
@@ -73,18 +74,18 @@ void QAMmodulator::modulate(const std::string& digital_word) {
 		else if (digital_word[1] == '0' && digital_word[2] == '1') {
 			I *= 5;
 		}
-		else if (digital_word[1] == '1' && digital_word[2] == '0') {
+		else if (digital_word[1] == '1' && digital_word[2] == '1') {
 			I *= 3;
 		}
 
 		if (digital_word[4] == '0' && digital_word[5] == '0') {
-			I *= 7;
+			Q *= 7;
 		}
 		else if (digital_word[4] == '0' && digital_word[5] == '1') {
-			I *= 5;
+			Q *= 5;
 		}
-		else if (digital_word[4] == '1' && digital_word[5] == '0') {
-			I *= 3;
+		else if (digital_word[4] == '1' && digital_word[5] == '1') {
+			Q *= 3;
 		}
 
 	}
