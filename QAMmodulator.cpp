@@ -25,7 +25,7 @@ QAMmodulator::QAMmodulator(const std::vector<std::string>& digitalData, const in
 		default:
 			break;
 		}
-		std::cout << digitalData[i] << ' ' << I << ' ' << Q << std::endl;
+		///std::cout << digitalData[i] << ' ' << I << ' ' << Q << std::endl;
 		for (int j = 0; j < n_rep; ++j, t += dt) {
 			///std::cout << t << std::endl;
 			IQ.push_back({ I, Q });

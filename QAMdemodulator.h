@@ -6,7 +6,7 @@
 
 
 # define M_PI           3.14159265358979323846  /* pi */
-# define EPS			0.1
+# define EPS			0.01
 class QAMdemodulator
 {
 private:

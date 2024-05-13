@@ -3,11 +3,11 @@
 class Noise
 {
 private:
-	const double min = -0.5;
-	const double max = 0.5;
+	const double min = 0;
+	const double max;
 	std::default_random_engine gausGenerator;
 public:
-	Noise(std::vector<double>& v) {
+	Noise(std::vector<double>& v, double d = 0.1) : max(d) {
 		std::normal_distribution<double> noise(min, max);
 		for (auto& el : v) {
 			el += noise(gausGenerator);
