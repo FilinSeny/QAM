@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Noise.h"
 #include<random>
+#include<iomanip>
+#include<cmath>
+#include<algorithm>
 
 
 std::vector<std::string> gen_test(const int& type) {
@@ -64,29 +67,40 @@ std::ostream& operator << (std::ostream & out, const std::complex<T>& v) {
 
 
 
-int test(int n, double d = 0.1)
+double test(int n, int m, double d = 0.1)
 {
-    
-    auto data = gen_test(n);
-    ///std::cout << data << std::endl;
-    QAMmodulator MyQAMm(data, n);
-    ///std::cout << MyQAMm.IQ << std::endl;
-    auto signal = MyQAMm.modulated;
-    Noise noise(signal, d);
+    int cnt_err = 0;
+    int n_data = 0;
+    Noise noise(d);
+    for (int i = 0; i < m; ++i) {
+        auto data = gen_test(n);
+        std::random_shuffle(data.begin(), data.end());
+        ///std::cout << data << std::endl;
+        QAMmodulator MyQAMm(data, n);
+        ///std::cout << MyQAMm.IQ << std::endl;
+        auto signal = MyQAMm.modulated;
+        noise.add_noise(signal);
 
-    QAMdemodulator MyQAMd(signal, n, data.size());
+        QAMdemodulator MyQAMd(signal, n, data.size());
 
-    int nerror = 0;
-    for (int i = 0; i < data.size(); ++i) {
-        for (int j = 0; j < data[i].size(); ++j) {
-            if (data[i][j] != MyQAMd.str_res[i][j]) {
-                ++nerror;
-                ///std::cout << data[i] << ' ' << MyQAMd.str_res[i] << std::endl;
+        int nerror = 0;
+        for (int i = 0; i < data.size(); ++i) {
+            for (int j = 0; j < data[i].size(); ++j) {
+                if (data[i][j] != MyQAMd.str_res[i][j]) {
+                    ++nerror;
+                    break;
+                    ///std::cout << data[i] << ' ' << MyQAMd.str_res[i] << std::endl;
+                }
             }
         }
+
+        cnt_err += nerror;
+        n_data += data.size();
     }
 
-    return nerror;
+    ///std::cout << cnt_err << std::endl;
+    
+    return (double) cnt_err * 1.0 / n_data;
     
 }
 
@@ -135,12 +149,29 @@ std::vector<std::string> seq_test(const int& type, int k = 100) {
 }
 
 
+inline double noise_disrep( double SNR) {
+    SNR /= 10.0;
+    double snr_lin = pow(10.0, SNR);    
+    return 1 /  snr_lin;
+}
+
 
 int main() {
-    double d;
-    std::cin >> d;
     
-    std::cout << test(4, d) << std::endl;
-    std::cout << test(16, d) << std::endl;
-    std::cout << test(64, d) << std::endl;
+    for (int i = 0; i < 25; i += 1) {
+        std::cout << std::setprecision(6) << i << ' '  << (double)test(4, 100000, (noise_disrep(i)) * 2) << ' ';
+    }
+    std::cout << std::endl;
+
+    for (int i = 0; i < 25; i += 1) {
+        std::cout << std::setprecision(6) << i << ' ' << (double)test(16, 10000, (noise_disrep(i) * 2)) << ' ';
+    }
+    std::cout << std::endl;
+
+    for (int i = 0; i < 25; i += 1) {
+        std::cout << std::setprecision(6) << i << ' '  << (double)test(64, 10000, (noise_disrep(i)) * 2) << ' ';
+    }
+    std::cout << std::endl;
+    
+    
 }

@@ -40,6 +40,8 @@ void QAMmodulator::modulate(const std::string& digital_word) {
 	I = 1;
 	Q = 1;
 	if (type == 4) {
+		Q /= sqrt(2);
+		I /= sqrt(2);
 		if (digital_word[0] == '0') {
 			I *= -1;
 		}

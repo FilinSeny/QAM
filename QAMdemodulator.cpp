@@ -1,4 +1,5 @@
 #include "QAMdemodulator.h"
+# define _EPS			0.1
 
 QAMdemodulator::QAMdemodulator(const std::vector<double>& Signal, const int& type, const int sig_len) {
 	int coef = 0;
@@ -56,12 +57,13 @@ QAMdemodulator::QAMdemodulator(const std::vector<double>& Signal, const int& typ
 
 
 std::string QAMdemodulator::QAM4d(const std::complex<double>& z) {
-	std::string str = "00";
 
-	if (z.real() > 0) {
+	std::string str = "00";
+	std::complex<double> _z = { z.real() * sqrt(2), z.imag() * sqrt(2) };
+	if (_z.real() > 0) {
 		str[0] = '1';
 	}
-	if (z.imag() > 0) {
+	if (_z.imag() > 0) {
 		str[1] = '1';
 	}
 
@@ -71,15 +73,17 @@ std::string QAMdemodulator::QAM4d(const std::complex<double>& z) {
 std::string QAMdemodulator::QAM16dc(const double & c) {
 	std::string str = "00";
 
-	if (c > EPS ) {
+	if (c > _EPS) {
 		str[0] = '1';
-		if (c > 1 + EPS) {
+		if (c > 1 + _EPS) {
 			str[1] = '1';
 		}
 	}
-	else if (c < -1 - EPS) {
+	else if (c < -1 - _EPS) {
 		str[1] = '1';
 	}
+
+	return str;
 
 	return str;
 }

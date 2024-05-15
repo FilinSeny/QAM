@@ -10,8 +10,8 @@
 class QAMdemodulator
 {
 private:
-	int frd = 80000;
-	int Br = 2000, M;
+	int frd = 4000;
+	int Br = 500, M;
 	double I, Q;
 	std::complex<double> val;
 	double qamEl;
@@ -21,7 +21,7 @@ public:
 	std::vector<std::complex<double>> demodulated;
 	std::vector<std::string> str_res;
 
-	const int fr = 4000;
+	const int fr = 1000;
 	/// <summary>
 	/// 
 	/// </summary>
